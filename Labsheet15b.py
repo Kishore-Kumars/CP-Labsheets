@@ -1,0 +1,48 @@
+#Problem Statement:Locate All Occurrences of a Pattern Using KMP String Matching
+
+def build_lps(pattern):
+    lps = [0] * len(pattern)
+    length = 0
+    i = 1
+
+    while i < len(pattern):
+        if pattern[i] == pattern[length]:
+            length += 1
+            lps[i] = length
+            i += 1
+        else:
+            if length != 0:
+                length = lps[length - 1]
+            else:
+                lps[i] = 0
+                i += 1
+
+    return lps
+
+
+text = input().strip()
+pattern = input().strip()
+
+lps = build_lps(pattern)
+
+i = j = 0
+found = False
+
+while i < len(text):
+    if text[i] == pattern[j]:
+        i += 1
+        j += 1
+
+        if j == len(pattern):
+            print(i - j)
+            j = lps[j - 1]
+            found = True
+
+    elif i < len(text) and text[i] != pattern[j]:
+        if j != 0:
+            j = lps[j - 1]
+        else:
+            i += 1
+
+if not found:
+    print("Pattern Not Found")
